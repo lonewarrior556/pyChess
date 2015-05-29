@@ -31,20 +31,19 @@ class Board(object):
 
 
     def direct_path(self, origin, destination, piece):
-        for x in piece.moves:
+        for x in piece.moves():
             if destination in x:
-                return list_split(x, destination):
-
+                indices = list_split(x, destination)
+                return get_elements(self.board, indices)
+        return set(["True"])
 
     def legal_move(self, a, b):
         piece = self.board[a]
-        conditions =[
-        (piece),
-        (b in reduce ( operator.add, piece.moves())),
-        (not set(self.direct_path()[1:-1])-set([False])]),
-        ((not self.board[b]) or (self.board[b].color != piece.color)) ]
-
-        for x in conditions:
-            if not x
-                return False
-        return True
+        if not piece:
+            return false
+        if all([
+        b in reduce ( operator.add, piece.moves() ),
+        not set(self.direct_path()[:-1])-set([False]),
+        (not self.board[b]) or (self.board[b].color != piece.color) ]):
+            return True
+        return False

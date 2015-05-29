@@ -11,9 +11,10 @@ class SteppingPiece(object):
     def moves(self):
         ls = []
         for x in self.motion:
+            ls.append([])
             y = self.position + x
             if y in range(1,79) and y % 10 % 9 != 0:
-                ls.append(y)
+                ls[-1].append(y)
         return ls
 
 
