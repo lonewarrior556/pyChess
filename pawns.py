@@ -7,26 +7,28 @@ class Pawn(object):
         self.touched = False
         self.notation = ""
 
-    def def_motions(self,board):
-        ls = [10,9,11]
-        if not self.touched:
-            ls.insert(0,20)
+    def motions(self):
+        ls = [20,10,9,11]
         if self.color == "black":
             ls = map(lambda x: x*-1, ls)
-        for i in range(2):
-            x = ls.pop()
-            diagnal_piece = board[self.position + x]
-            if diagnal_piece and diagnal_piece.color != self.color:
-                ls.insert(0,x)
         return ls
 
+
     def moves(self,board):
-        motions = self.def_motions(board)
+        motions = self.motions()
         ls = []
         for x in motions:
             ls.append([])
             y = self.position + x
             if y in range(1,79) and y % 10 % 9 != 0:
+                if x in [20, -20]:
+                    if self.touched or board[y]:
+                        continue
+                elif x in [10, -10]:
+                    if board[y]:
+                        continue
+                elif not board[y]:
+                    continue
                 ls[-1].append(y)
         return ls
 

@@ -42,4 +42,20 @@ if __name__ == "__main__":
         import board
         chess = board.Board()
         chess.display()
-        
+        while True:
+            if chess.check(chess.player_turn):
+                print "you are in check"
+            user_input = raw_input("\nplease enter move:\n").split(",")
+            print "\n\n\n\n" + str(sorted(user_input[0])[::-1]) +"\n\n\n\n"
+            chess.player_move(sorted(user_input[0])[::-1],sorted(user_input[1])[::-1])
+
+
+#
+# features:
+# check/mates
+# enpassant
+# promotions
+# castling
+#
+# saving
+# loading

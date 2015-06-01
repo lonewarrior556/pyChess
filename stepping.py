@@ -26,10 +26,10 @@ class SteppingPiece(object):
 
 class Knight(SteppingPiece):
     def __init__(self, position):
-        self.notation = 'K'
+        self.notation = 'N'
         super(Knight, self).__init__(self,position)
 
 class King(SteppingPiece):
     def __init__(self, position):
-        self.notation = 'N'
+        self.notation = 'K'
         super(King, self).__init__(self,position)
