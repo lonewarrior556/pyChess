@@ -1,12 +1,14 @@
 from pieces import *
 from helpers import *
 import operator
+import sys
 
 class Board(object):
 
     def __init__(self):
         self.board = [False]*79
         self.populate()
+        self.log = [[]]
 
     def populate(self):
         for i in range(11,19):
@@ -29,21 +31,54 @@ class Board(object):
             self.board[j] = self.board[i].__class__(j)
             self.board[j].color = "black"
 
-
-    def direct_path(self, origin, destination, piece):
-        for x in piece.moves():
+    def clear_path(self, origin, destination, piece):
+        for x in piece.moves(self.board):
             if destination in x:
                 indices = list_split(x, destination)
-                return get_elements(self.board, indices)
-        return set(["True"])
+                return  not set(get_elements(self.board, indices)[:-1]) - set([False])
+        return False
+
+    def king_position(self,color):
+        for i in range(79):
+            piece = self.board[i]
+            if piece and piece.color+type(piece).__name__ == str(color)+"King":
+                return i
+
+    def check(self,color):
+        b = self.king_position(color)
+        for i in range(79):
+            if self.legal_move(i,b):
+                print i,b
+                return True
+        return False
+
 
     def legal_move(self, a, b):
         piece = self.board[a]
         if not piece:
-            return false
-        if all([
-        b in reduce ( operator.add, piece.moves() ),
-        not set(self.direct_path()[:-1])-set([False]),
-        (not self.board[b]) or (self.board[b].color != piece.color) ]):
+            return False
+        elif not self.clear_path(a,b,piece):
+            return False
+        elif  self.board[b] and self.board[b].color == piece.color:
+            return False
+        else:
             return True
-        return False
+
+    def move(self, a, b):
+        piece = self.board[a]
+        piece.position = b
+        self.board[b] = piece
+        self.board[a] = False
+
+
+    def display(self):
+        sys.stderr.write("\x1b[2J\x1b[H")
+        for i in range(7,-1,-1):
+            row =  "["+str(i+1)+"] "
+            for j in range(1,9):
+                if self.board[ 10*i + j]:
+                    row += self.board[10*i + j].render()
+                else:
+                    row += ' _'
+            print row
+        print  "     A|B|C|D|E|F|G|H"

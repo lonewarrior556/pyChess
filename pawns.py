@@ -1,16 +1,37 @@
 class Pawn(object):
 
-    MOTIONS = [10,20,9,11]
-
 
     def __init__(self, position):
         self.color = 'white'
         self.position = position
-        self.touches = False
+        self.touched = False
+        self.notation = ""
 
-
-    def moves(self):
-        moves = self.MOTIONS
+    def def_motions(self,board):
+        ls = [10,9,11]
+        if not self.touched:
+            ls.insert(0,20)
         if self.color == "black":
-            moves = map(lambda x: x*-1, moves)
-        return moves
+            ls = map(lambda x: x*-1, ls)
+        for i in range(2):
+            x = ls.pop()
+            diagnal_piece = board[self.position + x]
+            if diagnal_piece and diagnal_piece.color != self.color:
+                ls.insert(0,x)
+        return ls
+
+    def moves(self,board):
+        motions = self.def_motions(board)
+        ls = []
+        for x in motions:
+            ls.append([])
+            y = self.position + x
+            if y in range(1,79) and y % 10 % 9 != 0:
+                ls[-1].append(y)
+        return ls
+
+    def render(self):
+        if self.color == "white":
+            return u' \u2659'
+        else:
+            return u' \u265f'
