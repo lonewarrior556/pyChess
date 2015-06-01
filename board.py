@@ -8,7 +8,14 @@ class Board(object):
     def __init__(self):
         self.board = [False]*79
         self.populate()
+        self.player_turn = 'white'
         self.log = [[]]
+
+    def toggle_turn:
+        if self.player_turn == 'white':
+            self.player_turn = 'black'
+        else:
+            self.player_turn = 'white'
 
     def populate(self):
         for i in range(11,19):
@@ -23,7 +30,6 @@ class Board(object):
         self.board[5]     = King(5)
         self.mirror_black( 70, range(1,9) )
         self.mirror_black( 50, range(11,19) )
-
 
     def mirror_black(self, offset, rang):
         for i in rang:
@@ -69,6 +75,10 @@ class Board(object):
         piece.position = b
         self.board[b] = piece
         self.board[a] = False
+
+    def player_move(self, a,b):
+        translate = ['Q','a','b','c','d','e','f','g','h']
+        origin =
 
 
     def display(self):
