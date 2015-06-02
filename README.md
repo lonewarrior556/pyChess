@@ -7,7 +7,8 @@
 - Game Board stores piece positions in a one dimensional array 
 
 
-## to run in terminal:
+## to run
+  in terminal write the following:
 - git clone https://github.com/lonewarrior556/pyChess
 - cd pyChess
 - python chess.py
