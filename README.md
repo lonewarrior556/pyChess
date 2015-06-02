@@ -8,9 +8,9 @@ Game Board stores piece positions in a one dimensional array
 
 
 ## to run in terminal:
-git clone https://github.com/lonewarrior556/pyChess
-cd pyChess
-python chess.py
+- git clone https://github.com/lonewarrior556/pyChess
+- cd pyChess
+- python chess.py
 
 ## other:
 Automatically askes if you want to load a saved game, to save an active game type "save".  
