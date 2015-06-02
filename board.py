@@ -2,6 +2,7 @@ from pieces import *
 from helpers import *
 import operator
 import sys
+import copy
 
 class Board(object):
 
@@ -10,10 +11,11 @@ class Board(object):
         self.populate()
         self.player_turn = 'white'
         self.log = [[]]
+        self.game_over = False
 
     def populate(self):
-        # for i in range(11,19):
-        #     self.board[i] = Pawn(i)
+        for i in range(11,19):
+            self.board[i] = Pawn(i)
         for i in [3,6]:
             self.board[i] = Bishop(i)
         for i in [1,8]:
@@ -23,7 +25,8 @@ class Board(object):
         self.board[4]     = Queen(4)
         self.board[5]     = King(5)
         self.mirror_black( 70, range(1,9) )
-        # self.mirror_black( 50, range(11,19) )
+        self.mirror_black( 50, range(11,19) )
+
 
     def mirror_black(self, offset, rang):
         for i in rang:
@@ -33,21 +36,29 @@ class Board(object):
 
     def toggle_turn(self):
         if self.player_turn == 'white':
-            self.player_turn = 'black'
+            return 'black'
         else:
-            self.player_turn = 'white'
+            return 'white'
 
     def log_move(self,b,origin, destination,piece):
+        if len(self.log[-1]) == 2:
+            self.log.append([])
         transition = ""
         in_check = " "
         if self.board[destination]:
             transition = 'x'
         self.move(origin,destination)
-        if self.check('white') or self.check('black'):
-            in_check = u'\u271D '
+        if self.check(self.toggle_turn()):
+            if self.mate(self.toggle_turn()):
+                in_check = "#"
+                self.game_over = True
+            else:
+                in_check = u'\u271D '
+        elif self.mate(self.toggle_turn()):
+            in_check = " DRAW 0.5 - 0.5"
+            self.game_over = True
+
         self.log[-1].append(piece.notation+transition+b+in_check)
-        if len(self.log[-1]) == 2:
-            self.log.append([])
 
     def clear_path(self, origin, destination, piece):
         for x in piece.moves(self.board):
@@ -63,12 +74,25 @@ class Board(object):
                 return i
 
     def check(self,color):
-        b = self.king_position(color)
+        b = self.king_position(color) or 0
         for i in range(79):
             if self.legal_move(i,b):
                 return True
         return False
 
+    def mate(self, color):
+        for i in range(1,79):
+            for j in range(1,79):
+                if self.legal_move(i,j) and self.board[i].color == color:
+                    new_board = copy.deepcopy(self)
+                    new_board.move(i,j)
+                    if not new_board.check(color):
+                        return False
+        return True
+
+
+    def stale_mate():
+        pass
 
     def legal_move(self, a, b):
         piece = self.board[a]
@@ -79,7 +103,12 @@ class Board(object):
         elif  self.board[b] and self.board[b].color == piece.color:
             return False
         else:
-            return True
+            dupped_board = copy.deepcopy(self)
+            dupped_board.move(a,b)
+            if dupped_board.check(self.player_turn):
+                return False
+            else:
+                return True
 
     def move(self, a, b):
         piece = self.board[a]
@@ -95,11 +124,13 @@ class Board(object):
 
         if self.legal_move(origin,destination) and self.board[origin].color == self.player_turn:
             self.log_move("".join(b),origin, destination, self.board[origin])
-            self.toggle_turn()
-        self.display()
+            self.player_turn = self.toggle_turn()
+            self.display()
+        else:
+            print "illegal move"
 
     def display(self):
-        # sys.stderr.write("\x1b[2J\x1b[H")
+        sys.stderr.write("\x1b[2J\x1b[H")
         for i in range(7,-1,-1):
             row =  "["+str(i+1)+"] "
             for j in range(1,9):
