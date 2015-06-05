@@ -130,9 +130,9 @@ class Board(object):
             print "illegal move"
 
     def display(self):
-        sys.stderr.write("\x1b[2J\x1b[H")
+        sys.stderr.write("\x1b[2J\x1b[H\n")
         for i in range(7,-1,-1):
-            row =  "["+str(i+1)+"] "
+            row =  "  ["+str(i+1)+"] "
             for j in range(1,9):
                 if self.board[ 10*i + j]:
                     row += self.board[10*i + j].render()
@@ -143,4 +143,4 @@ class Board(object):
             except:
                 log = ''
             print row + "    " + "".join(log)
-        print  "     A|B|C|D|E|F|G|H"
+        print  "       A|B|C|D|E|F|G|H"

@@ -1,3 +1,5 @@
+import sys
+sys.path.append('./lib')
 import board
 import os
 import pickle
@@ -25,6 +27,7 @@ if __name__ == "__main__":
                 i+=1
         if len(dic) == 0:
             print "sorry, no saved games available"
+            raw_input()
         else:
 
             print "\nselect game by number\n"
@@ -48,7 +51,7 @@ if __name__ == "__main__":
 
 
     while not chess.game_over:
-        user_input = raw_input("\nplease enter move: \n").lower()
+        user_input = raw_input("\n please enter move: \n    ").lower()
         if 'save' in user_input:
             print "saving..."
             file_name = raw_input("select file name, no spaces please: ")
@@ -69,12 +72,12 @@ if __name__ == "__main__":
             if confirmation in ['y','yes']:
                 break
         elif not re.search('^\s*[a-h]\s*[1-8]\s*,{1}\s*[a-h]\s*[1-8]\s*', user_input):
-            print "please only 1 letter + number combinations seperated by 1 comma ie e2,e4 \nor write SAVE to save, EXIT to quit"
+            print "  please only 1 letter + number combinations seperated by 1 comma ie e2,e4 \nor write SAVE to save, EXIT to quit"
             continue
         else:
             user_input= user_input.split(",")
             chess.player_move(sorted(user_input[0])[::-1],sorted(user_input[1])[::-1])
-    print "\nthanks for playing\n"
+    print "\n  thanks for playing\n"
 
 # enpassant
 # promotions
